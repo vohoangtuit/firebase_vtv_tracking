@@ -65,6 +65,7 @@ exports.notificationBookTour = functions.firestore.document('BookTourNotificatio
             totalAmount: totalAmount,
             monthDayYear: monthDayYear,
             typeBooking: typeBooking,
+            typeNotification: 1,// 1 booking, 2 delete account
             click_action: 'FLUTTER_NOTIFICATION_CLICK',
         };
             var message = {
@@ -96,4 +97,48 @@ exports.notificationBookTour = functions.firestore.document('BookTourNotificatio
 }
 );
 
+exports.notificationDeleteAccount = functions.firestore.document('deleteAccount/{documentId}').onCreate(
+  (snapshot,context) =>{
+   
+      var email = snapshot.get('email');
+      var fullName = snapshot.get('fullName');
+      var customercode = snapshot.get('customercode');
+      var data_={
+          email: email,
+          fullName: fullName,
+          customercode: customercode,
+          typeNotification: 2,// 1 booking, 2 delete account
+          click_action: 'FLUTTER_NOTIFICATION_CLICK',
+      };
+          var message = {
+      notification: {
+          title: 'Delete Account',
+          body: fullName,
+      },
+      data:{data:JSON.stringify(data_)},
+      android:{
+          notification: {
+              click_action: 'FLUTTER_NOTIFICATION_CLICK',
+              channel_id: 'VTV_Tracking_channel',
+              
+          },  
+      },
+     
+      topic: 'Notification',
+  
+  };
+ return admin.messaging().send(message)
+     .then((response) => {
 
+     console.log('Successfully sent message:', response);
+   })
+.catch((error) => {
+  console.log('Error sending message:', error);
+});
+
+}
+);
+
+
+// firebase login
+// firebase deploy --only functions
