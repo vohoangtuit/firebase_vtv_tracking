@@ -25,8 +25,16 @@ exports.bookTour = functions.database.ref('Tracking/BookTourSuccess/{bookId}/{su
        var timestamp =tour.date;
        var bookingStatus =''
        var bookingPayment =''
+       var deviceName='';
+       var versionApp='';
        if(tour.fullName!=null){
         fullName =tour.fullName;
+       }
+       if(tour.deviceName!=null){
+        deviceName =tour.deviceName;
+       }
+       if(tour.versionApp!=null){
+        versionApp =tour.versionApp;
        }
       
        let data = {
@@ -40,6 +48,8 @@ exports.bookTour = functions.database.ref('Tracking/BookTourSuccess/{bookId}/{su
         deviceType: deviceType,
         monthDayYear: monthDayYear,
         timestamp: timestamp,
+        deviceName: deviceName,
+        versionApp: versionApp,
         bookingStatus:bookingStatus,
         bookingPayment:bookingPayment,
         typeBooking: 1,// todo 1 is tour/combo : 2 hotel
