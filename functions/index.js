@@ -120,7 +120,7 @@ exports.bookHotel = functions.database.ref('Tracking/BookHotelSuccess/{bookId}/{
        // console.log('subId',  context.params.subId);
        if(hotel!=null){
         var title ='Booking Hotel';
-       //var bookingId =hotel.bookingId;
+       var bookingId =hotel.bookingId;
        var bookingNo =hotel.bookingNo;
        var totalAmount =hotel.bookingPrice;
        var email =hotel.email;
@@ -138,7 +138,7 @@ exports.bookHotel = functions.database.ref('Tracking/BookHotelSuccess/{bookId}/{
     
        let data = {
         title: title,
-      //  bookingId: bookingId,
+        bookingId: bookingId,
         bookingNo: bookingNo,
         totalAmount: totalAmount,
         email: email,
@@ -162,7 +162,8 @@ exports.bookHotel = functions.database.ref('Tracking/BookHotelSuccess/{bookId}/{
     });
 exports.notificationBookHotel = functions.firestore.document('BookHotelNotification/{documentId}').onCreate(
     (snapshot,context) =>{
-      var bookingNo = snapshot.get('bookingNo');
+       var bookingId = snapshot.get('bookingId');
+        var bookingNo = snapshot.get('bookingNo');
         var email = snapshot.get('email');
         var title_ = snapshot.get('title');
         var totalAmount = snapshot.get('totalAmount');
@@ -170,6 +171,7 @@ exports.notificationBookHotel = functions.firestore.document('BookHotelNotificat
         var typeBooking = snapshot.get('typeBooking');
         const fullName = snapshot.get('fullName');
         var data_={
+          bookingId: bookingId,
             bookingNo: bookingNo,
             email: email,
             title: title_,
