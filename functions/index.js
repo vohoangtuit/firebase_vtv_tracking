@@ -60,6 +60,60 @@ exports.bookTour = functions.database.ref('Tracking/BookTourSuccess/{bookId}/{su
 
        }
     });
+exports.bookTourComplete = functions.database.ref('Tracking/BookTourComplete/{bookId}/{subId}')
+    .onCreate((snap, context) => {
+        //const tour = snap.val();
+        var tour= snap.val();
+
+       if(tour!=null){
+        var title ='Booking Tour';
+       var bookingId =tour.bookingId;
+       var bookingNo =tour.bookingNo;
+       var totalAmount =tour.totalAmount;
+       var email =tour.email;
+       var dayMonthYear =tour.dayMonthYear;
+       var dayMonthYearHHMMSS =tour.dayMonthYearHHMMSS;
+       var fullName ='';
+       var phone ='';
+       var deviceType =tour.deviceType;
+       var timestamp =tour.timestamp;
+       var bookingStatus =''
+       var bookingPayment =''
+       var deviceName='';
+       var versionApp='';
+       if(tour.fullName!=null){
+        fullName =tour.fullName;
+       }
+       if(tour.deviceName!=null){
+        deviceName =tour.deviceName;
+       }
+       if(tour.versionApp!=null){
+        versionApp =tour.versionApp;
+       }
+      
+       let data = {
+        title: title,
+        bookingId: bookingId,
+        bookingNo: bookingNo,
+        totalAmount: totalAmount,
+        email: email,
+        fullName: fullName,
+        phone: phone,
+        deviceType: deviceType,
+        dayMonthYear: dayMonthYear,
+        dayMonthYearHHMMSS: dayMonthYearHHMMSS,
+        timestamp: timestamp,
+        deviceName: deviceName,
+        versionApp: versionApp,
+        bookingStatus:bookingStatus,
+        bookingPayment:bookingPayment,
+        typeBooking: 1,// todo 1 is tour/combo : 2 hotel
+      };
+       return db.collection('BookTourNotification').doc(bookingNo).set(data);
+     //  return db.collection('Notification').doc('BookTour').collection(timestamp.toString()).set(data);
+
+       }
+    });
 exports.notificationBookTour = functions.firestore.document('BookTourNotification/{documentId}').onCreate(
     (snapshot,context) =>{
       var bookingNo = snapshot.get('bookingNo');
