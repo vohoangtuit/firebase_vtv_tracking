@@ -10,9 +10,9 @@ exports.bookingTour = functions.database.ref('Tracking/BookTourComplete/{bookId}
     .onCreate((snap, context) => {
     
         var tour= snap.val();
-
-       if(tour!=null){
         var title ='Booking Tour';
+       if(tour!=null){
+    
        var bookingId =tour.bookingId;
        var bookingNo =tour.bookingNo;
        var totalAmount =tour.totalAmount;
@@ -45,26 +45,60 @@ exports.bookingTour = functions.database.ref('Tracking/BookTourComplete/{bookId}
         versionApp =tour.versionApp;
        }
       
-       let data = {
-        title: title,
-        bookingId: bookingId,
-        bookingNo: bookingNo,
-        totalAmount: totalAmount,
-        email: email,
-        fullName: fullName,
-        phone: phone,
-        deviceType: deviceType,
-        dayMonthYear: dayMonthYear,
-        yearMonthDayHHMMSS: yearMonthDayHHMMSS,
-        timestamp: timestamp,
-        deviceName: deviceName,
-        versionApp: versionApp,
-        bookingStatus:bookingStatus,
-        bookingPayment:bookingPayment,
-        typeBooking: 1,// todo 1 is tour/combo : 2 hotel
-      };
+    //    let data = {
+    //     title: title,
+    //     bookingId: bookingId,
+    //     bookingNo: bookingNo,
+    //     totalAmount: totalAmount,
+    //     email: email,
+    //     fullName: fullName,
+    //     phone: phone,
+    //     deviceType: deviceType,
+    //     dayMonthYear: dayMonthYear,
+    //     yearMonthDayHHMMSS: yearMonthDayHHMMSS,
+    //     timestamp: timestamp,
+    //     deviceName: deviceName,
+    //     versionApp: versionApp,
+    //     bookingStatus:bookingStatus,
+    //     bookingPayment:bookingPayment,
+    //     typeBooking: 1,// todo 1 is tour/combo : 2 hotel
+    //   };
+       //    return db.collection('BookTourNotification').doc(bookingNo).set(data);
 
-       return db.collection('BookTourNotification').doc(bookingNo).set(data);
+       var data_={
+        bookingNo: bookingNo,
+        email: email,
+        title: title,
+        totalAmount: totalAmount,
+        typeBooking: 1,
+        typeNotification: 1,// 1 booking, 2 delete account
+        click_action: 'FLUTTER_NOTIFICATION_CLICK',
+        };
+        var message = {
+            notification: {
+                title: title,
+                body: fullName,
+            },
+            data:{data:JSON.stringify(data_)},
+            android:{
+                notification: {
+                    click_action: 'FLUTTER_NOTIFICATION_CLICK',
+                    channel_id: 'VTV_Tracking_channel',
+                    
+                },  
+            },
+        
+            topic: 'Notification',
+
+         };
+    return  admin.messaging().send(message).then((response) => {
+
+                 console.log('Successfully sent message: Booking Tour', response);
+            })
+        .catch((error) => {
+        console.log('Error sending message: Booking Tour', error);
+            });
+
 
        }
     });
@@ -242,31 +276,30 @@ exports.bookingFlight = functions.database.ref('Tracking/BookFlightSuccess/{book
         click_action: 'FLUTTER_NOTIFICATION_CLICK',
     };
         var message = {
-    notification: {
+        notification: {
         title: 'Booking Flight',
         body: fullName,
-    },
-    data:{data:JSON.stringify(data_)},
-    android:{
+            },
+         data:{data:JSON.stringify(data_)},
+        android:{
         notification: {
             click_action: 'FLUTTER_NOTIFICATION_CLICK',
             channel_id: 'VTV_Tracking_channel',
             
         },  
-    },
+        },
    
-    topic: 'Notification',
+        topic: 'Notification',
 
-};
+        };
     return  admin.messaging().send(message).then((response) => {
 
-                 console.log('Successfully sent message:', response);
+                 console.log('Successfully sent message: Booking Flight', response);
             })
         .catch((error) => {
-        console.log('Error sending message:', error);
+        console.log('Error sending message: Booking Flight', error);
             });
-    
-       
+
        }
     });
 
@@ -295,31 +328,29 @@ exports.bookingHotel = functions.database.ref('Tracking/BookHotelSuccess/{bookId
         click_action: 'FLUTTER_NOTIFICATION_CLICK',
     };
         var message = {
-    notification: {
-        title: 'Booking Hotel',
-        body: fullName,
-    },
-    data:{data:JSON.stringify(data_)},
-    android:{
-        notification: {
-            click_action: 'FLUTTER_NOTIFICATION_CLICK',
-            channel_id: 'VTV_Tracking_channel',
-            
-        },  
-    },
+            notification: {
+            title: 'Booking Hotel',
+            body: fullName,
+            },
+            data:{data:JSON.stringify(data_)},
+            android:{
+                notification: {
+                    click_action: 'FLUTTER_NOTIFICATION_CLICK',
+                    channel_id: 'VTV_Tracking_channel',
+                    
+                },  
+                },
    
-    topic: 'Notification',
+        topic: 'Notification',
 
-};
+        };
     return admin.messaging().send(message).then((response) => {
 
-                 console.log('Successfully sent message:', response);
+                 console.log('Successfully sent message: Booking Hotel', response);
             })
         .catch((error) => {
-        console.log('Error sending message:', error);
+        console.log('Error sending message: Booking Hotel', error);
             });
-       
-       
        
        }
     });
