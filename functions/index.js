@@ -17,7 +17,7 @@ exports.bookingTour = functions.database.ref('Tracking/BookTourComplete/{bookId}
        var bookingNo =tour.bookingNo;
        var totalAmount =tour.totalAmount;
        var email =tour.email;
-       var dayMonthYear =tour.dayMonthYear;
+       var yearMonthDay =tour.dayMonthYear;
 
        var yearMonthDayHHMMSS ='';
        if(tour.dayMonthYearHHMMSS!=null){
@@ -67,6 +67,7 @@ exports.bookingTour = functions.database.ref('Tracking/BookTourComplete/{bookId}
 
        var data_={
         bookingNo: bookingNo,
+        yearMonthDay:yearMonthDay,
         email: email,
         title: title,
         totalAmount: totalAmount,
@@ -257,7 +258,7 @@ exports.bookingFlight = functions.database.ref('Tracking/BookFlightSuccess/{book
         var flight= snap.val();
 
        if(flight!=null){
-        var title ='Booking Flight';
+        var title ='Đặt Vé Máy Bay';
        var bookingId =flight.bookingId;
        var bookingNo =flight.bookingNo;
        var email =flight.email;
@@ -270,14 +271,14 @@ exports.bookingFlight = functions.database.ref('Tracking/BookFlightSuccess/{book
         bookingNo: bookingNo,
         email: email,
         trackBooking: trackBooking,
-        title: 'Booking Flight',
+        title: 'Đặt Vé Máy Bay',
         typeBooking: 2,
         typeNotification: 1,// 1 booking, 2 delete account
         click_action: 'FLUTTER_NOTIFICATION_CLICK',
     };
         var message = {
         notification: {
-        title: 'Booking Flight',
+        title: 'Đặt Vé Máy Bay',
         body: fullName,
             },
          data:{data:JSON.stringify(data_)},
@@ -309,7 +310,7 @@ exports.bookingHotel = functions.database.ref('Tracking/BookHotelSuccess/{bookId
         var hotel= snap.val();
 
        if(hotel!=null){
-        var title ='Booking Hotel';
+        var title ='Đặt Khách Sạn';
        var bookingId =hotel.bookingId;
        var bookingNo =hotel.bookingNo;
        var email =hotel.email;
@@ -322,14 +323,14 @@ exports.bookingHotel = functions.database.ref('Tracking/BookHotelSuccess/{bookId
         bookingNo: bookingNo,
         email: email,
         trackBooking: trackBooking,
-        title: 'Booking Hotel',
+        title: 'Đặt Khách Sạn',
         typeBooking: 2,
         typeNotification: 1,// 1 booking, 2 delete account
         click_action: 'FLUTTER_NOTIFICATION_CLICK',
     };
         var message = {
             notification: {
-            title: 'Booking Hotel',
+            title: 'Đặt Khách Sạn',
             body: fullName,
             },
             data:{data:JSON.stringify(data_)},
