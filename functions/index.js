@@ -6,6 +6,7 @@ admin.initializeApp(functions.config().firebase);
 const db = getFirestore();
 
 
+
 exports.bookingTour = functions.database.ref('Tracking/BookTourComplete/{bookId}/{subId}')
     .onCreate((snap, context) => {
     
@@ -103,53 +104,53 @@ exports.bookingTour = functions.database.ref('Tracking/BookTourComplete/{bookId}
 
        }
     });
-exports.notificationBookingTour = functions.firestore.document('BookTourNotification/{documentId}').onCreate(
-    (snapshot,context) =>{
-      var bookingNo = snapshot.get('bookingNo');
-        var email = snapshot.get('email');
-        var title_ = snapshot.get('title');
-        var totalAmount = snapshot.get('totalAmount');
-        var monthDayYear = snapshot.get('monthDayYear');
-        var typeBooking = snapshot.get('typeBooking');
-        const fullName = snapshot.get('fullName');
-        var data_={
-            bookingNo: bookingNo,
-            email: email,
-            title: title_,
-            totalAmount: totalAmount,
-            monthDayYear: monthDayYear,
-            typeBooking: typeBooking,
-            typeNotification: 1,// 1 booking, 2 delete account
-            click_action: 'FLUTTER_NOTIFICATION_CLICK',
-        };
-            var message = {
-        notification: {
-            title: title_,
-            body: fullName,
-        },
-        data:{data:JSON.stringify(data_)},
-        android:{
-            notification: {
-                click_action: 'FLUTTER_NOTIFICATION_CLICK',
-                channel_id: 'VTV_Tracking_channel',
+// exports.notificationBookingTour = functions.firestore.document('BookTourNotification/{documentId}').onCreate(
+//     (snapshot,context) =>{
+//       var bookingNo = snapshot.get('bookingNo');
+//         var email = snapshot.get('email');
+//         var title_ = snapshot.get('title');
+//         var totalAmount = snapshot.get('totalAmount');
+//         var monthDayYear = snapshot.get('monthDayYear');
+//         var typeBooking = snapshot.get('typeBooking');
+//         const fullName = snapshot.get('fullName');
+//         var data_={
+//             bookingNo: bookingNo,
+//             email: email,
+//             title: title_,
+//             totalAmount: totalAmount,
+//             monthDayYear: monthDayYear,
+//             typeBooking: typeBooking,
+//             typeNotification: 1,// 1 booking, 2 delete account
+//             click_action: 'FLUTTER_NOTIFICATION_CLICK',
+//         };
+//             var message = {
+//         notification: {
+//             title: title_,
+//             body: fullName,
+//         },
+//         data:{data:JSON.stringify(data_)},
+//         android:{
+//             notification: {
+//                 click_action: 'FLUTTER_NOTIFICATION_CLICK',
+//                 channel_id: 'VTV_Tracking_channel',
                 
-            },  
-        },
+//             },  
+//         },
        
-        topic: 'Notification',
+//         topic: 'Notification',
     
-    };
-     admin.messaging().send(message)
-       .then((response) => {
+//     };
+//      admin.messaging().send(message)
+//        .then((response) => {
 
-       console.log('Successfully sent message:', response);
-     })
-  .catch((error) => {
-    console.log('Error sending message:', error);
-  });
+//        console.log('Successfully sent message:', response);
+//      })
+//   .catch((error) => {
+//     console.log('Error sending message:', error);
+//   });
 
-}
-);
+// }
+// );
 
 // todo Hotel
 // exports.bookHotel = functions.database.ref('Tracking/BookHotelSuccess/{bookId}/{subId}')
@@ -197,7 +198,7 @@ exports.notificationBookingTour = functions.firestore.document('BookTourNotifica
 //       };
       
 //        return db.collection('BookHotelNotification').doc(timestamp.toString()).set(data);
-//      //  return db.collection('Notification').doc('BookTour').collection(timestamp.toString()).set(data);
+//        return db.collection('Notification').doc('BookTour').collection(timestamp.toString()).set(data);
 
 //        }
 //     });
@@ -250,6 +251,9 @@ exports.notificationBookingTour = functions.firestore.document('BookTourNotifica
 
 // }
 // );
+
+
+
 
 // todo : hotel, flight ko cần add data vào firestore database
 exports.bookingFlight = functions.database.ref('Tracking/BookFlightSuccess/{bookId}/{subId}')
@@ -304,6 +308,8 @@ exports.bookingFlight = functions.database.ref('Tracking/BookFlightSuccess/{book
        }
     });
 
+
+
 exports.bookingHotel = functions.database.ref('Tracking/BookHotelSuccess/{bookId}/{subId}')
     .onCreate((snap, context) => {
     
@@ -355,6 +361,62 @@ exports.bookingHotel = functions.database.ref('Tracking/BookHotelSuccess/{bookId
        
        }
     });
+
+
+
+exports.bookingHotelFlight = functions.database.ref('Tracking/BookHotelAndFlightSuccess/{bookId}/{subId}')
+    .onCreate((snap, context) => {
+    
+        var hotel= snap.val();
+
+       if(hotel!=null){
+        var title ='Đặt Vé Máy Bay-Khách Sạn';
+       var bookingId =hotel.bookingId;
+       var bookingNo =hotel.bookingNo;
+       var email =hotel.email;
+       var trackBooking =hotel.trackBooking;
+       var yearMonthDay =hotel.yearMonthDay;
+       var yearMonthDayHHMMSS =hotel.yearMonthDayHHMMSS;
+    
+       var  fullName =hotel.fullName;
+       var data_={
+        bookingNo: bookingNo,
+        email: email,
+        trackBooking: trackBooking,
+        title: 'Đặt Vé Máy Bay-Khách Sạn',
+        typeBooking: 2,
+        typeNotification: 1,// 1 booking, 2 delete account
+        click_action: 'FLUTTER_NOTIFICATION_CLICK',
+    };
+        var message = {
+            notification: {
+            title: 'Đặt Vé Máy Bay-Khách Sạn',
+            body: fullName,
+            },
+            data:{data:JSON.stringify(data_)},
+            android:{
+                notification: {
+                    click_action: 'FLUTTER_NOTIFICATION_CLICK',
+                    channel_id: 'VTV_Tracking_channel',
+                    
+                },  
+                },
+   
+        topic: 'Notification',
+
+        };
+    return admin.messaging().send(message).then((response) => {
+
+                 console.log('Successfully sent message: Booking VMB_KS', response);
+            })
+        .catch((error) => {
+        console.log('Error sending message: Booking VMB_KS', error);
+            });
+       
+       }
+    });
+
+
 
 // todo Delete Account
 exports.notificationDeleteAccount = functions.firestore.document('deleteAccount/{documentId}').onCreate(
